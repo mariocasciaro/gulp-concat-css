@@ -1,7 +1,7 @@
 {
   "name": "gulp-concat-css",
   "description": "Concatenate css files, rebasing urls and inlining @import",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/mariocasciaro/gulp-concat-css",
   "author": {
     "name": "Mario Casciaro"
