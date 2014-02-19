@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Font1';
+    src: url('../lib/fonts/webfont.eot');
+}
+
+
+.navbar-header {
+    clear: both;
+}

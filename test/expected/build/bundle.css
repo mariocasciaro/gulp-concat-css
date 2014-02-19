@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'Font';
+    src: url('../lib/fonts/webfont.eot');
+}
+
+.navbar-header-2 {
+    clear: both;
+}
+ projection, tv;
+
+.navbar-header:after {
+    clear: both;
+}
+@media (min-width: 768px) {
+    .navbar-header {
+        float: left;
+    }
+}
+;
+@import url("chrome://communicator/skin/");
+
+
+@font-face {
+    font-family: 'Font';
+    src: url('../lib/fonts/webfont.eot?v=4.0.0');
+    src: url('../lib/fonts/webfont.eot');
+}
+
+@font-face {
+    font-family: 'Font1';
+    src: url('../lib/fonts/webfont.eot');
+}
+
+
+.navbar-header {
+    clear: both;
+}
