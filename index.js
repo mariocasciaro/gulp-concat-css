@@ -2,6 +2,8 @@
 var gutil = require('gulp-util'),
   path = require('path'),
   fs = require('fs'),
+  rework = require('rework'),
+  reworkImporter = require('rework-importer'),
   through = require('through2');
 
 
@@ -10,38 +12,8 @@ module.exports = function(destFile) {
   var buffer = [];
   var firstFile = null;
   
-  function loadCss(fileBase, filePath, contents) {
-    if(!contents) {
-      try {
-        contents = fs.readFileSync(filePath, 'utf8');
-      } catch(err) {
-        gutil.log(gutil.colors.red("[gulp-concat-css] Cannot resolve import " + filePath));
-        return undefined;
-      }
-    }
-    
-    return contents
-      .replace(/\burl\(\s*'([^']+)'\s*\)/gi, function(match, url) {
-        if(isUrl(url)) {
-          return match;
-        }
-
-        var resourceAbsUrl = path.relative(fileBase, path.resolve(path.dirname(filePath), url));
-        var newUrl = path.relative(destDir, resourceAbsUrl);
-        return "url('"+newUrl+"')";
-      })
-      .replace(/@import\s+(?:url\()?["'']([^'"]+)["']\)?/gi, function(match, url) {
-        if(isUrl(url)) {
-          return match;
-        }
-        
-        return loadCss(fileBase, path.resolve(path.dirname(filePath), url)) || match;
-      });
-  }
-
-
-	return through.obj(function(file, enc, cb) {
-		if (file.isStream()) {
+  return through.obj(function(file, enc, cb) {
+    if (file.isStream()) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', 'Streaming not supported'));
       return cb();
     }
@@ -50,9 +22,28 @@ module.exports = function(destFile) {
       firstFile = file;
     }
 
-    buffer.push(loadCss(file.base, file.path, String(file.contents)));
-		cb();
-	}, function(cb) {
+    try {
+      var processedCss = rework(String(file.contents), 'utf-8')
+        .use(reworkImporter({
+          path: file.path,
+          base: file.base
+        }))
+        .use(rework.url(function(url){
+          if(isUrl(url)) {
+            return url;
+          }
+          var resourceAbsUrl = path.relative(file.base, path.resolve(path.dirname(file.path), url));
+          return path.relative(destDir, resourceAbsUrl);
+        }))
+        .toString();
+    } catch(err) {
+      this.emit('error', new gutil.PluginError('gulp-concat-css', err));
+      return cb();
+    }
+
+    buffer.push(processedCss);
+    cb();
+  }, function(cb) {
     var concatenatedFile = new gutil.File({
       base: firstFile.base,
       cwd: firstFile.cwd,

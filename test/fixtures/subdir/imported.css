@@ -3,7 +3,7 @@
     src: url('../lib/fonts/webfont.eot');
 }
 
-@import url("../vendor/importedRecursive.css") projection, tv;
+@import url("../vendor/importedRecursive.css");
 
 .navbar-header:after {
     clear: both;

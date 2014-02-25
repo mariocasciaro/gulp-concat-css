@@ -1,6 +1,4 @@
-@import 'subdir/imported.css';
-@import url("chrome://communicator/skin/");
-
+@import url('subdir/imported.css');
 
 @font-face {
     font-family: 'Font';
