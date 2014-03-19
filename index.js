@@ -33,7 +33,16 @@ module.exports = function(destFile) {
             return url;
           }
           var resourceAbsUrl = path.relative(file.base, path.resolve(path.dirname(file.path), url));
-          return path.relative(destDir, resourceAbsUrl);
+          resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
+          //not all systems use forward slash as path separator
+          //this is required by urls.
+          if(path.sep !== '/'){
+            //first escape the path.sep so we can use it
+            var find = path.sep.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            //replace with forward slash
+            resourceAbsUrl = resourceAbsUrl.replace(new RegExp(find, 'g'), '/');
+          }
+          return resourceAbsUrl;
         }))
         .toString();
     } catch(err) {
