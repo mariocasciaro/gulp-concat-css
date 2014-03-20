@@ -36,11 +36,9 @@ module.exports = function(destFile) {
           resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
           //not all systems use forward slash as path separator
           //this is required by urls.
-          if(path.sep !== '/'){
-            //first escape the path.sep so we can use it
-            var find = path.sep.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+          if(path.sep === '\\'){
             //replace with forward slash
-            resourceAbsUrl = resourceAbsUrl.replace(new RegExp(find, 'g'), '/');
+            resourceAbsUrl = resourceAbsUrl.replace(/\\/g, '/');
           }
           return resourceAbsUrl;
         }))
