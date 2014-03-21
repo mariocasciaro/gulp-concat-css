@@ -33,7 +33,14 @@ module.exports = function(destFile) {
             return url;
           }
           var resourceAbsUrl = path.relative(file.base, path.resolve(path.dirname(file.path), url));
-          return path.relative(destDir, resourceAbsUrl);
+          resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
+          //not all systems use forward slash as path separator
+          //this is required by urls.
+          if(path.sep === '\\'){
+            //replace with forward slash
+            resourceAbsUrl = resourceAbsUrl.replace(/\\/g, '/');
+          }
+          return resourceAbsUrl;
         }))
         .toString();
     } catch(err) {
