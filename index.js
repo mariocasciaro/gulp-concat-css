@@ -63,7 +63,7 @@ module.exports = function(destFile) {
 };
 
 function isUrl(url) {
-  return (/^[\w]+:\/\/./).test(url);
+  return (/^([\w]+:)?\/\/./).test(url);
 }
 
 
