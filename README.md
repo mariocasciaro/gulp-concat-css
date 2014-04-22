@@ -19,8 +19,6 @@ npm install --save-dev gulp-concat-css
 var gulp = require('gulp');
 var concatCss = require('gulp-concat-css');
 
-var cloneSink = clone();
-
 gulp.task('default', function () {
   gulp.src('assets/**/*.css')
     .pipe(concatCss("styles/bundle.css"))
@@ -31,7 +29,3 @@ gulp.task('default', function () {
 ## License
 
 [MIT](http://en.wikipedia.org/wiki/MIT_License) @ Mario Casciaro
-
------
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mariocasciaro/gulp-concat-css/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
