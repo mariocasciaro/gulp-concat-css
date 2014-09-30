@@ -32,7 +32,7 @@ module.exports = function(destFile) {
           if(isUrl(url)) {
             return url;
           }
-          var resourceAbsUrl = path.relative(file.base, path.resolve(path.dirname(file.path), url));
+          var resourceAbsUrl = path.resolve(path.dirname(file.path), url);
           resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
           //not all systems use forward slash as path separator
           //this is required by urls.
