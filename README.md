@@ -1,7 +1,8 @@
-# [gulp](https://github.com/wearefractal/gulp)-concat-css 
-[![Build Status](https://secure.travis-ci.org/mariocasciaro/gulp-concat-css.png?branch=master)](https://travis-ci.org/mariocasciaro/gulp-concat-css) 
-[![NPM version](https://badge.fury.io/js/gulp-concat-css.png)](http://badge.fury.io/js/gulp-concat-css) 
+# [gulp](https://github.com/wearefractal/gulp)-concat-css
+[![Build Status](https://secure.travis-ci.org/mariocasciaro/gulp-concat-css.png?branch=master)](https://travis-ci.org/mariocasciaro/gulp-concat-css)
+[![NPM version](http://img.shields.io/npm/v/gulp-concat-css.svg)](https://www.npmjs.org/package/gulp-concat-css)
 [![Dependency Status](https://gemnasium.com/mariocasciaro/gulp-concat-css.png)](https://gemnasium.com/mariocasciaro/gulp-concat-css)
+[![Downloads](http://img.shields.io/npm/dm/gulp-concat-css.svg)](https://www.npmjs.org/package/gulp-concat-css)
 
 > Concatenate css files, rebasing urls and inlining @import.
 

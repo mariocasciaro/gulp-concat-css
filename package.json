@@ -20,14 +20,14 @@
     }
   ],
   "dependencies": {
-    "gulp-util": "~2.2.14",
-    "through2": "~0.4.1",
-    "rework-importer": "git://github.com/mariocasciaro/rework-importer.git#pre-post-process",
+    "gulp-util": "~3.0.1",
+    "through2": "~1.1.1",
+    "rework-importer": "~0.4.0",
     "rework": "~0.20.2"
   },
   "devDependencies": {
-    "chai": "~1.9.0",
-    "mocha": "~1.17.1"
+    "chai": "~1.9.2",
+    "mocha": "~1.21.4"
   },
   "scripts": {
     "test": "node_modules/mocha/bin/_mocha test/*.js --reporter spec"
@@ -35,6 +35,9 @@
   "keywords": [
     "gulpplugin",
     "concat",
-    "css"
+    "css",
+    "import",
+    "merge",
+    "inline"
   ]
 }
