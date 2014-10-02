@@ -30,7 +30,7 @@ function fixture(file) {
 
 describe('gulp-concat-css', function() {
   it('should concat, rebase urls and inline imports', function(done) {
-    
+
     var stream = concatCss('build/bundle.css');
     var expectedFile = expected('build/bundle.css');
     stream
@@ -42,7 +42,7 @@ describe('gulp-concat-css', function() {
         expect(file.relative, "relative").to.be.equal(expectedFile.relative);
         done();
       }));
-    
+
     stream.write(fixture('main.css'));
     stream.write(fixture('vendor/vendor.css'));
     stream.end();

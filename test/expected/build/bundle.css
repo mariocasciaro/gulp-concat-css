@@ -9,6 +9,7 @@
 
 .navbar-header:after {
   clear: both;
+  background: url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/) no-repeat left center;
 }
 
 @media (min-width: 768px) {
