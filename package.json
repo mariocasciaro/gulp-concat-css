@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "gulp-util": "~3.0.1",
+    "parse-import": "^1.0.0",
     "rework": "~1.0.0",
     "rework-import": "^1.2.1",
     "rework-plugin-function": "^1.0.1",

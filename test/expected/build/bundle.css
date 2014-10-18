@@ -1,3 +1,7 @@
+@import url("http://fonts.googleapis.com/css");
+
+@import url("//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic");
+
 @font-face {
   font-family: 'Font';
   src: url("../lib/fonts/webfont.eot");
@@ -23,7 +27,6 @@
   src: url("../lib/fonts/webfont.eot?v=4.0.0");
   src: url("../lib/fonts/webfont.eot");
 }
-@import url("//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic");
 
 @font-face {
   font-family: 'Font1';
