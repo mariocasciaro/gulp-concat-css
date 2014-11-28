@@ -13,7 +13,7 @@ module.exports = function(destFile) {
   var firstFile, commonBase;
   var destDir = path.dirname(destFile);
   var urlImportRules = [];
-    
+
   return through.obj(function(file, enc, cb) {
     if (file.isStream()) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', 'Streaming not supported'));
@@ -46,8 +46,8 @@ module.exports = function(destFile) {
         return 'url("' + resourceAbsUrl + '")';
       }});
     }
-    
-    
+
+
     function collectImportUrls(styles) {
       var outRules = [];
       styles.rules.forEach(function(rule) {
@@ -55,7 +55,7 @@ module.exports = function(destFile) {
           return outRules.push(rule);
         }
 
-        var importData = parseImport('@import ' + rule.import);
+        var importData = parseImport('@import ' + rule.import + ';');
         if(isUrl(importData.path)) {
           return urlImportRules.push(rule);
         }
@@ -97,7 +97,7 @@ module.exports = function(destFile) {
         styles.rules = urlImportRules.concat(styles.rules)
       })
       .toString();
-    
+
     var concatenatedFile = new gutil.File({
       base: firstFile.base,
       cwd: firstFile.cwd,
