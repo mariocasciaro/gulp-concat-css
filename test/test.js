@@ -30,7 +30,7 @@ function fixture(file) {
 
 describe('gulp-concat-css', function() {
   it('should concat, rebase urls and inline imports', function(done) {
-
+    var now = Date.now();
     var stream = concatCss('build/bundle.css');
     var expectedFile = expected('build/bundle.css');
     stream
@@ -40,6 +40,7 @@ describe('gulp-concat-css', function() {
         expect(path.basename(file.path)).to.be.equal(path.basename(expectedFile.path));
         expect(file.cwd, "cwd").to.be.equal(expectedFile.cwd);
         expect(file.relative, "relative").to.be.equal(expectedFile.relative);
+        console.log('Execution time: ' + (Date.now() - now) + 'ms');
         done();
       }));
 

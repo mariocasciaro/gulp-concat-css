@@ -92,11 +92,9 @@ module.exports = function(destFile) {
     buffer.push(processedCss);
     cb();
   }, function(cb) {
-    var contents = rework(buffer.join(gutil.linefeed))
-      .use(function(styles) {
-        styles.rules = urlImportRules.concat(styles.rules)
-      })
-      .toString();
+    var contents = urlImportRules.map(function(rule) {
+      return '@import ' + rule.import + ';';
+    }).concat(buffer).join(gutil.linefeed);
 
     var concatenatedFile = new gutil.File({
       base: firstFile.base,
