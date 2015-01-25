@@ -5,8 +5,8 @@ var fs = require('fs');
 var rework = require('rework');
 var reworkImport = require('rework-import');
 var through = require('through2');
-var reworkPluginFunction = require('rework-plugin-function');
 var parseImport = require('parse-import');
+var reworkUrl = require('rework-plugin-url');
 
 module.exports = function(destFile) {
   var buffer = [];
@@ -26,15 +26,11 @@ module.exports = function(destFile) {
     }
 
     function urlPlugin(file) {
-      return reworkPluginFunction({url: function() {
-        var rawUrl = Array.prototype.slice.apply(arguments).join(',');
-        var url = rawUrl.split('"').join('');
-        url = url.split('\'').join('');
-        url = url.trim();
-
+      return reworkUrl(function(url) {
         if(isUrl(url) || isDataURI(url) || path.extname(url) === '.css' || path.resolve(url) === url) {
-          return 'url(' + rawUrl + ')';
+          return url;
         }
+
         var resourceAbsUrl = path.relative(commonBase, path.resolve(path.dirname(file), url));
         resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
         //not all systems use forward slash as path separator
@@ -43,8 +39,8 @@ module.exports = function(destFile) {
           //replace with forward slash
           resourceAbsUrl = resourceAbsUrl.replace(/\\/g, '/');
         }
-        return 'url("' + resourceAbsUrl + '")';
-      }});
+        return resourceAbsUrl;
+      });
     }
 
 
@@ -56,7 +52,8 @@ module.exports = function(destFile) {
         }
 
         var importData = parseImport('@import ' + rule.import + ';');
-        if(isUrl(importData.path)) {
+        var importPath = importData && importData[0].path;
+        if(isUrl(importPath)) {
           return urlImportRules.push(rule);
         }
         return outRules.push(rule);
@@ -65,9 +62,9 @@ module.exports = function(destFile) {
     }
 
 
-    function urlRewrite(contents, file) {
+    function urlRewrite(contents) {
       return rework(contents)
-        .use(urlPlugin(file))
+        .use(urlPlugin(this.source))
         .use(collectImportUrls)
         .toString()
     }

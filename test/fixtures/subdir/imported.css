@@ -11,6 +11,7 @@
 }
 @media (min-width: 768px) {
     .navbar-header {
-        float: left;
+      background: url('data:image/png;base64,iVBORwJggg==') no-repeat scroll 100% 50% rgba(0, 0, 0, 0);
+      float: left;
     }
 }
