@@ -7,12 +7,17 @@ var reworkImport = require('rework-import');
 var through = require('through2');
 var parseImport = require('parse-import');
 var reworkUrl = require('rework-plugin-url');
-
-module.exports = function(destFile) {
+var defaults = require('lodash.defaults');
+  
+module.exports = function(destFile, options) {
   var buffer = [];
   var firstFile, commonBase;
   var destDir = path.dirname(destFile);
   var urlImportRules = [];
+  options = defaults({}, options, {
+    inlineImports: true,
+    rebaseUrls: true
+  });
 
   return through.obj(function(file, enc, cb) {
     if (file.isStream()) {
@@ -53,7 +58,7 @@ module.exports = function(destFile) {
 
         var importData = parseImport('@import ' + rule.import + ';');
         var importPath = importData && importData[0].path;
-        if(isUrl(importPath)) {
+        if(isUrl(importPath) || !options.inlineImports) {
           return urlImportRules.push(rule);
         }
         return outRules.push(rule);
@@ -62,25 +67,35 @@ module.exports = function(destFile) {
     }
 
 
-    function urlRewrite(contents) {
-      return rework(contents)
-        .use(urlPlugin(this.source))
-        .use(collectImportUrls)
-        .toString()
+    function processNestedImport(contents) {
+      var rew = rework(contents);
+      if(options.rebaseUrls) {
+        rew = rew.use(urlPlugin(this.source));
+      }
+      rew = rew.use(collectImportUrls);
+      return rew.toString();
     }
 
     try {
-      var processedCss = rework(String(file.contents))
-        .use(urlPlugin(file.path))
-        .use(collectImportUrls)
-        .use(reworkImport({
+      var processedCss = rework(String(file.contents));
+      if(options.rebaseUrls) {
+        processedCss = processedCss.use(urlPlugin(file.path));
+      }
+      
+      processedCss = processedCss.use(collectImportUrls);
+      
+      if(options.inlineImports) {
+        processedCss = processedCss.use(reworkImport({
           path: [
             '.',
             path.dirname(file.path)
           ],
-          transform: urlRewrite
+          transform: processNestedImport
         }))
-        .toString();
+          .toString();
+      }
+      
+      processedCss = processedCss.toString();
     } catch(err) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', err));
       return cb();

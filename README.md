@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/mariocasciaro/gulp-concat-css.svg)](https://david-dm.org/mariocasciaro/gulp-concat-css)
 [![Downloads](http://img.shields.io/npm/dm/gulp-concat-css.svg)](https://www.npmjs.org/package/gulp-concat-css)
 
-> Concatenate css files, rebasing urls and inlining @import.
+> Concatenates css files, bubbling up @import statements (as per the [standard](https://developer.mozilla.org/en-US/docs/Web/CSS/@import)), and optionally rebasing urls and inlining local @import statements.
 
 ## Install
 
@@ -26,6 +26,16 @@ gulp.task('default', function () {
     .pipe(gulp.dest('out/'));
 });
 ```
+
+**TIP: for a proper import inlining and url rebase, make sure you set the proper `base` for the input files.**
+
+## API
+
+`concatCss(targetFile, options)`
+* `targetFile`: The relative path of the generated file containing the concatenated css
+* `options`: (since 2.1.0)
+    * `inlineImports`: (default `true`) Inline any local import statement found
+    * `rebaseUrls`: (default `true`) Adjust any relative URL to the location of the target file.
 
 ## License
 
