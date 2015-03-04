@@ -1,14 +1,13 @@
 'use strict';
 var gutil = require('gulp-util');
 var path = require('path');
-var fs = require('fs');
 var rework = require('rework');
 var reworkImport = require('rework-import');
 var through = require('through2');
 var parseImport = require('parse-import');
 var reworkUrl = require('rework-plugin-url');
 var defaults = require('lodash.defaults');
-  
+
 module.exports = function(destFile, options) {
   var buffer = [];
   var firstFile, commonBase;
@@ -20,6 +19,8 @@ module.exports = function(destFile, options) {
   });
 
   return through.obj(function(file, enc, cb) {
+    var processedCss;
+
     if (file.isStream()) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', 'Streaming not supported'));
       return cb();
@@ -77,13 +78,13 @@ module.exports = function(destFile, options) {
     }
 
     try {
-      var processedCss = rework(String(file.contents));
+      processedCss = rework(String(file.contents||""));
       if(options.rebaseUrls) {
         processedCss = processedCss.use(urlPlugin(file.path));
       }
-      
+
       processedCss = processedCss.use(collectImportUrls);
-      
+
       if(options.inlineImports) {
         processedCss = processedCss.use(reworkImport({
           path: [
@@ -94,7 +95,7 @@ module.exports = function(destFile, options) {
         }))
           .toString();
       }
-      
+
       processedCss = processedCss.toString();
     } catch(err) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', err));
