@@ -105,6 +105,10 @@ module.exports = function(destFile, options) {
     buffer.push(processedCss);
     cb();
   }, function(cb) {
+    if(!firstFile) {
+      return cb();
+    }
+
     var contents = urlImportRules.map(function(rule) {
       return '@import ' + rule.import + ';';
     }).concat(buffer).join(gutil.linefeed);

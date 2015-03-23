@@ -36,7 +36,7 @@ describe('gulp-concat-css', function() {
     stream
       .pipe(through.obj(function(file, enc, cb) {
         //fs.writeFileSync("bundle.css", file.contents);
-        
+
         expect(String(file.contents)).to.be.equal(String(expectedFile.contents));
         expect(path.basename(file.path)).to.be.equal(path.basename(expectedFile.path));
         expect(file.cwd, "cwd").to.be.equal(expectedFile.cwd);
@@ -92,7 +92,7 @@ describe('gulp-concat-css', function() {
     stream.write(fixture('vendor/vendor.css'));
     stream.end();
   });
-  
+
   it('should concat, rebase urls, inline imports and bubble up external imports', function(done) {
     var now = Date.now();
     var stream = concatCss('build/bundle-all.css');
@@ -110,6 +110,21 @@ describe('gulp-concat-css', function() {
 
     stream.write(fixture('main.css'));
     stream.write(fixture('vendor/vendor.css'));
+    stream.end();
+  });
+
+  it('should not crash if no file is provided', function(done) {
+    var stream = concatCss('build/bundle-all.css');
+    stream
+      .on('error', function() {
+        done(false);
+      })
+      .pipe(through.obj(function(file, enc, cb) {
+        done(false);
+      }, function() {
+        done();
+      }));
+
     stream.end();
   });
 });
