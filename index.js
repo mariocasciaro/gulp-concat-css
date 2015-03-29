@@ -15,7 +15,8 @@ module.exports = function(destFile, options) {
   var urlImportRules = [];
   options = defaults({}, options, {
     inlineImports: true,
-    rebaseUrls: true
+    rebaseUrls: true,
+    includePaths: []
   });
 
   return through.obj(function(file, enc, cb) {
@@ -90,7 +91,7 @@ module.exports = function(destFile, options) {
           path: [
             '.',
             path.dirname(file.path)
-          ],
+          ].concat(options.includePaths),
           transform: processNestedImport
         }))
           .toString();
