@@ -71,6 +71,26 @@ describe('gulp-concat-css', function() {
     stream.end();
   });
 
+  it('should only rebase urls with `base` option', function(done) {
+    var now = Date.now();
+    var stream = concatCss('build/bundle-rebase-option-base.css', {inlineImports: false, basedir: __dirname});
+    var expectedFile = expected('build/bundle-rebase-option-base.css');
+    stream
+      .pipe(through.obj(function(file, enc, cb) {
+        //fs.writeFileSync("bundle.css", file.contents);
+
+        expect(String(file.contents)).to.be.equal(String(expectedFile.contents));
+        expect(path.basename(file.path)).to.be.equal(path.basename(expectedFile.path));
+        expect(file.cwd, "cwd").to.be.equal(expectedFile.cwd);
+        expect(file.relative, "relative").to.be.equal(expectedFile.relative);
+        console.log('Execution time: ' + (Date.now() - now) + 'ms');
+        done();
+      }));
+
+    stream.write(fixture('main.css'));
+    stream.write(fixture('vendor/vendor.css'));
+    stream.end();
+  });
 
   it('should only inline imports', function(done) {
     var now = Date.now();

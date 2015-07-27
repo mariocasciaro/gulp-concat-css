@@ -27,7 +27,7 @@ gulp.task('default', function () {
 });
 ```
 
-**TIP: for a proper import inlining and url rebase, make sure you set the proper `base` for the input files.**
+**TIP: for a proper import inlining and url rebase, make sure you set the proper `base` for the input files or by using `basedir` option.**
 
 ## API
 
@@ -36,6 +36,7 @@ gulp.task('default', function () {
 * `options`: (since 2.1.0)
     * `inlineImports`: (default `true`) Inline any local import statement found
     * `rebaseUrls`: (default `true`) Adjust any relative URL to the location of the target file.
+    * `basedir`: (default `null`) Absolute path to base directory used for URL rebasing.
     * `includePaths`: (default `[]`) Include additional paths when inlining imports
 
 ## License
