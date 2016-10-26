@@ -38,8 +38,10 @@ module.exports = function(destFile, options) {
           return url;
         }
 
-        var resourceAbsUrl = path.relative(commonBase, path.resolve(path.dirname(file), url));
-        resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
+        var resourceAbsUrl = path.relative(
+          path.resolve(commonBase, destDir),
+          path.resolve(path.dirname(file), url)
+        );
         //not all systems use forward slash as path separator
         //this is required by urls.
         if(path.sep === '\\'){
