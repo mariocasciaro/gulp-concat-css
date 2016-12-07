@@ -10,13 +10,14 @@ var defaults = require('lodash.defaults');
 
 module.exports = function(destFile, options) {
   var buffer = [];
-  var firstFile, commonBase;
+  var firstFile;
   var destDir = path.dirname(destFile);
   var urlImportRules = [];
   options = defaults({}, options, {
     inlineImports: true,
     rebaseUrls: true,
-    includePaths: []
+    includePaths: [],
+    basedir: null
   });
 
   return through.obj(function(file, enc, cb) {
@@ -29,7 +30,6 @@ module.exports = function(destFile, options) {
 
     if(!firstFile) {
       firstFile = file;
-      commonBase = file.base;
     }
 
     function urlPlugin(file) {
@@ -38,7 +38,8 @@ module.exports = function(destFile, options) {
           return url;
         }
 
-        var resourceAbsUrl = path.relative(commonBase, path.resolve(path.dirname(file), url));
+        var basedir = options.basedir || firstFile.base;
+        var resourceAbsUrl = path.relative(basedir, path.resolve(path.dirname(file), url));
         resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
         //not all systems use forward slash as path separator
         //this is required by urls.
