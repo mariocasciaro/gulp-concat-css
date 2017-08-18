@@ -27,7 +27,7 @@ gulp.task('default', function () {
 });
 ```
 
-**TIP: for a proper import inlining and url rebase, make sure you set the proper `base` for the input files.**
+**TIP: above example will create file `out/styles/bundle.css`, using `out/` as the new base directory.**
 
 ## API
 
