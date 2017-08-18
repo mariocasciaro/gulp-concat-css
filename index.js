@@ -8,10 +8,10 @@ var parseImport = require('parse-import');
 var reworkUrl = require('rework-plugin-url');
 var defaults = require('lodash.defaults');
 
-module.exports = function(destFile, options) {
+module.exports = function (destFile, options) {
   var buffer = [];
-  var firstFile, commonBase;
-  var destDir = path.dirname(destFile);
+  var hasFiles = false;
+  var destDir = path.dirname(path.resolve(destFile));
   var urlImportRules = [];
   options = defaults({}, options, {
     inlineImports: true,
@@ -19,7 +19,7 @@ module.exports = function(destFile, options) {
     includePaths: []
   });
 
-  return through.obj(function(file, enc, cb) {
+  return through.obj(function (file, enc, cb) {
     var processedCss;
 
     if (file.isStream()) {
@@ -27,22 +27,18 @@ module.exports = function(destFile, options) {
       return cb();
     }
 
-    if(!firstFile) {
-      firstFile = file;
-      commonBase = file.base;
-    }
+    hasFiles = true;
 
     function urlPlugin(file) {
-      return reworkUrl(function(url) {
-        if(isUrl(url) || isDataURI(url) || path.extname(url) === '.css' || path.resolve(url) === url) {
+      return reworkUrl(function (url) {
+        if (isUrl(url) || isDataURI(url) || path.extname(url) === '.css' || path.resolve(url) === url) {
           return url;
         }
 
-        var resourceAbsUrl = path.relative(commonBase, path.resolve(path.dirname(file), url));
-        resourceAbsUrl = path.relative(destDir, resourceAbsUrl);
+        var resourceAbsUrl = path.relative(destDir, path.resolve(path.dirname(file), url));
         //not all systems use forward slash as path separator
         //this is required by urls.
-        if(path.sep === '\\'){
+        if (path.sep === '\\') {
           //replace with forward slash
           resourceAbsUrl = resourceAbsUrl.replace(/\\/g, '/');
         }
@@ -50,17 +46,16 @@ module.exports = function(destFile, options) {
       });
     }
 
-
     function collectImportUrls(styles) {
       var outRules = [];
-      styles.rules.forEach(function(rule) {
-        if(rule.type !== 'import') {
+      styles.rules.forEach(function (rule) {
+        if (rule.type !== 'import') {
           return outRules.push(rule);
         }
 
         var importData = parseImport('@import ' + rule.import + ';');
         var importPath = importData && importData[0].path;
-        if(isUrl(importPath) || !options.inlineImports) {
+        if (isUrl(importPath) || !options.inlineImports) {
           return urlImportRules.push(rule);
         }
         return outRules.push(rule);
@@ -68,10 +63,9 @@ module.exports = function(destFile, options) {
       styles.rules = outRules;
     }
 
-
     function processNestedImport(contents) {
-      var rew = rework(contents,{source:this.source});//find the css file has syntax errors
-      if(options.rebaseUrls) {
+      var rew = rework(contents, { source: this.source });//find the css file has syntax errors
+      if (options.rebaseUrls) {
         rew = rew.use(urlPlugin(this.source));
       }
       rew = rew.use(collectImportUrls);
@@ -79,14 +73,14 @@ module.exports = function(destFile, options) {
     }
 
     try {
-      processedCss = rework(String(file.contents||""),{source:file.path});//find the css file has syntax errors
-      if(options.rebaseUrls) {
+      processedCss = rework(String(file.contents || ""), { source: file.path });//find the css file has syntax errors
+      if (options.rebaseUrls) {
         processedCss = processedCss.use(urlPlugin(file.path));
       }
 
       processedCss = processedCss.use(collectImportUrls);
 
-      if(options.inlineImports) {
+      if (options.inlineImports) {
         processedCss = processedCss.use(reworkImport({
           path: [
             '.',
@@ -98,26 +92,24 @@ module.exports = function(destFile, options) {
       }
 
       processedCss = processedCss.toString();
-    } catch(err) {
+    } catch (err) {
       this.emit('error', new gutil.PluginError('gulp-concat-css', err));
       return cb();
     }
 
     buffer.push(processedCss);
     cb();
-  }, function(cb) {
-    if(!firstFile) {
+  }, function (cb) {
+    if (!hasFiles) {
       return cb();
     }
 
-    var contents = urlImportRules.map(function(rule) {
+    var contents = urlImportRules.map(function (rule) {
       return '@import ' + rule.import + ';';
     }).concat(buffer).join(gutil.linefeed);
 
     var concatenatedFile = new gutil.File({
-      base: firstFile.base,
-      cwd: firstFile.cwd,
-      path: path.join(firstFile.base, destFile),
+      path: path.resolve(destFile),
       contents: new Buffer(contents)
     });
     this.push(concatenatedFile);
