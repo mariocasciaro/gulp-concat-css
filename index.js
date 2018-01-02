@@ -1,5 +1,6 @@
 'use strict';
-var gutil = require('gulp-util');
+var PluginError = require('plugin-error');
+var Vinyl = require('vinyl');
 var path = require('path');
 var rework = require('rework');
 var reworkImport = require('rework-import');
@@ -23,7 +24,7 @@ module.exports = function(destFile, options) {
     var processedCss;
 
     if (file.isStream()) {
-      this.emit('error', new gutil.PluginError('gulp-concat-css', 'Streaming not supported'));
+      this.emit('error', new PluginError('gulp-concat-css', 'Streaming not supported'));
       return cb();
     }
 
@@ -99,7 +100,7 @@ module.exports = function(destFile, options) {
 
       processedCss = processedCss.toString();
     } catch(err) {
-      this.emit('error', new gutil.PluginError('gulp-concat-css', err));
+      this.emit('error', new PluginError('gulp-concat-css', err));
       return cb();
     }
 
@@ -112,9 +113,9 @@ module.exports = function(destFile, options) {
 
     var contents = urlImportRules.map(function(rule) {
       return '@import ' + rule.import + ';';
-    }).concat(buffer).join(gutil.linefeed);
+    }).concat(buffer).join('\n');
 
-    var concatenatedFile = new gutil.File({
+    var concatenatedFile = new Vinyl({
       base: firstFile.base,
       cwd: firstFile.cwd,
       path: path.join(firstFile.base, destFile),

@@ -20,13 +20,14 @@
     }
   ],
   "dependencies": {
-    "gulp-util": "~3.0.1",
     "lodash.defaults": "^3.0.0",
     "parse-import": "^2.0.0",
+    "plugin-error": "^0.1.2",
     "rework": "~1.0.0",
     "rework-import": "^2.0.0",
     "rework-plugin-url": "^1.0.1",
-    "through2": "~1.1.1"
+    "through2": "~1.1.1",
+    "vinyl": "^2.1.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",
