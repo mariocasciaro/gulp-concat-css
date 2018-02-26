@@ -17,7 +17,8 @@ module.exports = function(destFile, options) {
   options = defaults({}, options, {
     inlineImports: true,
     rebaseUrls: true,
-    includePaths: []
+    includePaths: [],
+    commonBase: null
   });
 
   return through.obj(function(file, enc, cb) {
@@ -30,7 +31,7 @@ module.exports = function(destFile, options) {
 
     if(!firstFile) {
       firstFile = file;
-      commonBase = file.base;
+      commonBase = options.commonBase || file.base;
     }
 
     function urlPlugin(file) {
